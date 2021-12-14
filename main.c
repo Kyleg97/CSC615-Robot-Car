@@ -56,6 +56,31 @@ void backward(int speed, int motor) {
     PCA9685_SetLevel(PCA_CHANNEL_1, 1);
     PCA9685_SetLevel(PCA_CHANNEL_2, 0);
 }
+void turn(int Dir){
+    if( Dir == 0 ){// 0 for left turn and 1 for right 
+        PCA9685_SetPwmDutyCycle(PCA_CHANNEL_0, 100);
+        PCA9685_SetLevel(PCA_CHANNEL_1, 1);
+        PCA9685_SetLevel(PCA_CHANNEL_2, 0);
+
+        PCA9685_SetPwmDutyCycle(PCA_CHANNEL_5, speed);
+        PCA9685_SetLevel(PCA_CHANNEL_3, 1);
+        PCA9685_SetLevel(PCA_CHANNEL_4, 0);
+
+    }
+    else if( Dir == 1 ){
+        PCA9685_SetPwmDutyCycle(PCA_CHANNEL_0, 100);
+        PCA9685_SetLevel(PCA_CHANNEL_1, 1);
+        PCA9685_SetLevel(PCA_CHANNEL_2, 0);
+
+        PCA9685_SetPwmDutyCycle(PCA_CHANNEL_5, speed);
+        PCA9685_SetLevel(PCA_CHANNEL_3, 1);
+        PCA9685_SetLevel(PCA_CHANNEL_4, 0);
+    }
+    else{
+        printf("Neither right or left turn direction specified\n");
+    }
+
+}
 
 // stops the motor
 void stop() {
