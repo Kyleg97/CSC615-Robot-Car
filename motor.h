@@ -11,5 +11,5 @@
 // function prototypes
 void forward(int speed, int motor);
 void backward(int speed, int motor);
-void turn(int speed);
+void turn(int speed, int motor);
 void stop();
