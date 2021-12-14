@@ -68,3 +68,40 @@ void* line(void* args) {
         }
     }
 }
+
+void RouteDecider(){
+    if( leftLineSensor == 0 && middleLineSensor == 1 && rightLineSensor == 0 ){
+        //run engine straight
+        forward(100,1);
+    }
+    else if( leftLineSensor == 1 && middleLineSensor == 0 && rightLineSensor == 0 ){
+        //turn left
+        turn(0);
+    }
+    else if ( leftLineSensor == 0 && middleLineSensor == 0 && rightLineSensor == 1 ){
+        //turn right
+        turn(1);
+    }
+    //for following two cases adjust until only the middle sensor runs
+    else if( leftLineSensor == 1 && middleLineSensor == 1 && rightLineSensor == 0 ){
+        //adjust left
+    }
+    else if ( leftLineSensor == 0 && middleLineSensor == 1 && rightLineSensor == 1 ){
+        //adjust right 
+    }
+    else if( leftLineSensor == 0 && middleLineSensor == 0 && rightLineSensor == 0 ){
+        //find the line
+    }
+
+    //following cases unlikely to happen but should be considered
+
+    else if( leftLineSensor == 1 && middleLineSensor == 1 && rightLineSensor == 1 ){
+        //somehow all the sensors are on the line
+        //possible case at a corner and car is slightly off center
+    }
+    else if( leftLineSensor == 1 && middleLineSensor == 0 && rightLineSensor == 1 ){
+        //lol how would this happen
+    }
+
+}
+
