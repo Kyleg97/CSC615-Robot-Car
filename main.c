@@ -28,35 +28,54 @@ typedef struct {
 } lineSensorArgs;
 
 void RouteDecider() {
+    // if the car is positioned straight on the line (middle sensor on line, outer off line)
     if (leftLineSensor == 0 && middleLineSensor == 1 && rightLineSensor == 0) {
-        forward(75, 1);
+        forward(50, 1);
+    // if the left sensor is on the line, and the middle/right sensors off line
     } else if(leftLineSensor == 1 && middleLineSensor == 0 && rightLineSensor == 0) {
         //turn left
-        turn(0, 75);
+        stop();
+        turn(0, 50);
         while(leftLineSensor == 1);
-        forward(75, 1);
+        forward(50, 1);
+    // if the right sensor is on the line, and the other 2 are off the line
     } else if (leftLineSensor == 0 && middleLineSensor == 0 && rightLineSensor == 1) {
         //turn right
-        turn(1, 75);
+        stop();
+        turn(1, 50);
         while(rightLineSensor == 1);
-        forward(75, 1);
+        forward(50, 1);
+    // if both the left/middle are on line, adjust to center car
     } else if (leftLineSensor == 1 && middleLineSensor == 1 && rightLineSensor == 0) {
         //adjust left
-        turn(1, 75);
+        stop();
+        turn(1, 50);
         while(leftLineSensor == 1);
-        forward(75, 1);
+        forward(50, 1);
+    // if both the right/middle are on line, adjust to center car
     } else if (leftLineSensor == 0 && middleLineSensor == 1 && rightLineSensor == 1) {
         //adjust right
-        turn(0, 75);
+        stop();
+        turn(0, 50);
         while(rightLineSensor == 1);
-        forward(75, 1);
+        forward(50, 1);
+    // if all sensors are off the line, turn and hope we find it
     } else if (leftLineSensor == 0 && middleLineSensor == 0 && rightLineSensor == 0) {
-        //find the line
+        // find the line
+        // turn in place
+        stop();
+        turn(0, 50);
+        while(middleLineSensor != 1 && leftLineSensor == 1 && rightLineSensor == 1);
+    // if all three sensors are on the line (probably stuck turning)
     } else if(leftLineSensor == 1 && middleLineSensor == 1 && rightLineSensor == 1) {
-        //somehow all the sensors are on the line
-        //possible case at a corner and car is slightly off center
+        stop();
+        turn(0, 50);
+        while(middleLineSensor != 1 && leftLineSensor == 1 && rightLineSensor == 1);
+    // if outer sensors are on line but middle isnt (probably stuck on a turn)
     } else if(leftLineSensor == 1 && middleLineSensor == 0 && rightLineSensor == 1) {
-        //lol how would this happen
+        stop();
+        turn(0, 50);
+        while(middleLineSensor != 1 && leftLineSensor == 1 && rightLineSensor == 1);
     }
 }
 
@@ -110,15 +129,16 @@ int main() {
     turn(0);
     sleep(2);
     stop(); */
-    square();
+    // square();
     // forward(75, 1);
 
     // infinite loop for when the motor
     // reaches the backward function to
     // run until program is quit
-   /* while(1) {
+    printf("before route decider while loop...");
+    while(1) {
       RouteDecider();
-    }*/
+    }
 
     DEV_ModuleExit();
 

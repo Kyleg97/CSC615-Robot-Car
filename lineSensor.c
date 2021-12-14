@@ -31,23 +31,6 @@ void* line(void* args) {
             // update our data and keep it safe with mutex locking
             if (lineSensor == MIDDLE) {
                 pthread_mutex_lock(&lineMutex);
-                middleLineSensor = 0;
-                pthread_mutex_unlock(&lineMutex);
-            } else if (lineSensor == LEFT) {
-                pthread_mutex_lock(&lineMutex);
-                leftLineSensor = 0;
-                pthread_mutex_unlock(&lineMutex);
-            } else if (lineSensor == RIGHT) {
-                pthread_mutex_lock(&lineMutex);
-                rightLineSensor = 0;
-                pthread_mutex_unlock(&lineMutex);
-            }
-        }
-
-        if (digitalRead(lineSensor) == LOW) {
-            // update our data and keep it safe with mutex locking
-            if (lineSensor == MIDDLE) {
-                pthread_mutex_lock(&lineMutex);
                 middleLineSensor = 1;
                 pthread_mutex_unlock(&lineMutex);
             } else if (lineSensor == LEFT) {
@@ -57,6 +40,23 @@ void* line(void* args) {
             } else if (lineSensor == RIGHT) {
                 pthread_mutex_lock(&lineMutex);
                 rightLineSensor = 1;
+                pthread_mutex_unlock(&lineMutex);
+            }
+        }
+
+        if (digitalRead(lineSensor) == LOW) {
+            // update our data and keep it safe with mutex locking
+            if (lineSensor == MIDDLE) {
+                pthread_mutex_lock(&lineMutex);
+                middleLineSensor = 0;
+                pthread_mutex_unlock(&lineMutex);
+            } else if (lineSensor == LEFT) {
+                pthread_mutex_lock(&lineMutex);
+                leftLineSensor = 0;
+                pthread_mutex_unlock(&lineMutex);
+            } else if (lineSensor == RIGHT) {
+                pthread_mutex_lock(&lineMutex);
+                rightLineSensor = 0;
                 pthread_mutex_unlock(&lineMutex);
             }
         }
