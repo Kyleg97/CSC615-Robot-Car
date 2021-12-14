@@ -23,73 +23,84 @@ void Handler(int signo) {
   exit(0);
 }
 
+// 1 is left, 0 is right
+int lastTurned = 1;
+
 typedef struct {
   int lineSensorPin;
 } lineSensorArgs;
 
-void RouteDecider() {
+void RouteDecider(int speed) {
     // if the car is positioned straight on the line (middle sensor on line, outer off line)
     if (leftLineSensor == 0 && middleLineSensor == 1 && rightLineSensor == 0) {
-        forward(50, 1);
+        forward(speed, 1);
     // if the left sensor is on the line, and the middle/right sensors off line
     } else if(leftLineSensor == 1 && middleLineSensor == 0 && rightLineSensor == 0) {
         //turn left
+        printf("turning left...1\n");
         stop();
-        turn(0, 50);
+        turn(1, speed);
+        lastTurned = 1;
         while(leftLineSensor == 1);
-        forward(50, 1);
+        forward(speed, 1);
     // if the right sensor is on the line, and the other 2 are off the line
     } else if (leftLineSensor == 0 && middleLineSensor == 0 && rightLineSensor == 1) {
         //turn right
+        printf("turning right...1\n");
         stop();
-        turn(1, 50);
+        turn(0, speed);
+        lastTurned = 0;
         while(rightLineSensor == 1);
-        forward(50, 1);
+        forward(speed, 1);
     // if both the left/middle are on line, adjust to center car
     } else if (leftLineSensor == 1 && middleLineSensor == 1 && rightLineSensor == 0) {
         //adjust left
+        printf("turning left...2\n");
         stop();
-        turn(1, 50);
+        turn(1, speed);
+        lastTurned = 1;
         while(leftLineSensor == 1);
-        forward(50, 1);
+        forward(speed, 1);
     // if both the right/middle are on line, adjust to center car
     } else if (leftLineSensor == 0 && middleLineSensor == 1 && rightLineSensor == 1) {
         //adjust right
+        printf("turning right...3\n");
         stop();
-        turn(0, 50);
+        turn(0, speed);
+        lastTurned = 0;
         while(rightLineSensor == 1);
-        forward(50, 1);
+        forward(speed, 1);
     // if all sensors are off the line, turn and hope we find it
     } else if (leftLineSensor == 0 && middleLineSensor == 0 && rightLineSensor == 0) {
         // find the line
         // turn in place
+        printf("turning in place...\n");
         stop();
-        turn(0, 50);
-        while(middleLineSensor != 1 && leftLineSensor == 1 && rightLineSensor == 1);
+        if (lastTurned == 0) {
+          turn(0, speed);
+        } else if (lastTurned == 1) {
+          turn(1, speed);
+        }
+        while(middleLineSensor != 1);
+        forward(speed, 1);
     // if all three sensors are on the line (probably stuck turning)
     } else if(leftLineSensor == 1 && middleLineSensor == 1 && rightLineSensor == 1) {
-        stop();
+        /*stop();
         turn(0, 50);
-        while(middleLineSensor != 1 && leftLineSensor == 1 && rightLineSensor == 1);
+        while(middleLineSensor != 1 && leftLineSensor == 1 && rightLineSensor == 1);*/
     // if outer sensors are on line but middle isnt (probably stuck on a turn)
     } else if(leftLineSensor == 1 && middleLineSensor == 0 && rightLineSensor == 1) {
+        printf("no sensors see a line!\n");
         stop();
-        turn(0, 50);
-        while(middleLineSensor != 1 && leftLineSensor == 1 && rightLineSensor == 1);
-    }
-}
+        if (lastTurned == 0) {
+          turn(1, speed);
+        } else if (lastTurned == 1) {
+          turn(0, speed);
+        }
+        while(middleLineSensor != 1);
+        forward(speed, 1);
 
-void square() {
-  for (int i = 0; i < 4; i++) {
-    forward(75, 1);
-    sleep(1);
-    stop();
-    sleep(1);
-    turn(1, 75);
-    sleep(1);
-    stop();
-    sleep(1);
-  }
+    }
 }
 
 int main() {
@@ -114,30 +125,8 @@ int main() {
 
     signal(SIGINT, Handler);
 
-    /* forward(70, 1);
-    sleep(2);
-    stop();
-    sleep(2);
-    turn(1);
-    sleep(2);
-    stop();
-    sleep(2);
-    forward(70,1);
-    sleep(2);
-    stop();
-    sleep(2);
-    turn(0);
-    sleep(2);
-    stop(); */
-    // square();
-    // forward(75, 1);
-
-    // infinite loop for when the motor
-    // reaches the backward function to
-    // run until program is quit
-    printf("before route decider while loop...");
     while(1) {
-      RouteDecider();
+      RouteDecider(50);
     }
 
     DEV_ModuleExit();

@@ -1,7 +1,7 @@
 #include "motor.h"
 
 void turn(int dir, int speed) {
-    if (dir == 0) { // 0 for left turn and 1 for right
+    if (dir == 0) { // 1 for left turn and 0 for right
         PCA9685_SetPwmDutyCycle(PCA_CHANNEL_0, speed);
         PCA9685_SetLevel(PCA_CHANNEL_1, 1);
         PCA9685_SetLevel(PCA_CHANNEL_2, 0);
@@ -12,12 +12,12 @@ void turn(int dir, int speed) {
 
     } else if (dir == 1){
         PCA9685_SetPwmDutyCycle(PCA_CHANNEL_0, speed);
-        PCA9685_SetLevel(PCA_CHANNEL_1, 1);
-        PCA9685_SetLevel(PCA_CHANNEL_2, 0);
+        PCA9685_SetLevel(PCA_CHANNEL_1, 0);
+        PCA9685_SetLevel(PCA_CHANNEL_2, 1);
 
         PCA9685_SetPwmDutyCycle(PCA_CHANNEL_5, speed);
-        PCA9685_SetLevel(PCA_CHANNEL_3, 1);
-        PCA9685_SetLevel(PCA_CHANNEL_4, 0);
+        PCA9685_SetLevel(PCA_CHANNEL_3, 0);
+        PCA9685_SetLevel(PCA_CHANNEL_4, 1);
     }
 }
 
