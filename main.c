@@ -58,7 +58,19 @@ void RouteDecider() {
     } else if(leftLineSensor == 1 && middleLineSensor == 0 && rightLineSensor == 1) {
         //lol how would this happen
     }
+}
 
+void square() {
+  for (int i = 0; i < 4; i++) {
+    forward(75, 1);
+    sleep(1);
+    stop();
+    sleep(1);
+    turn(1, 75);
+    sleep(1);
+    stop();
+    sleep(1);
+  }
 }
 
 int main() {
@@ -98,15 +110,15 @@ int main() {
     turn(0);
     sleep(2);
     stop(); */
-
-    forward(75, 1);
+    square();
+    // forward(75, 1);
 
     // infinite loop for when the motor
     // reaches the backward function to
     // run until program is quit
-    while(1) {
+   /* while(1) {
       RouteDecider();
-    }
+    }*/
 
     DEV_ModuleExit();
 
