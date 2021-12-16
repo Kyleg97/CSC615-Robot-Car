@@ -43,18 +43,18 @@ printf("/%d,%d,%d Avoidance routine sensor value \n",objectLeft,objectFront,obje
         turn(0,50);
         while(objectRight == 0){
         }       
-        stop();
-        turn(0,50);
+        stop();//picks up the object
+        turn(0,50);//continues to turn
         while(objectRight == 1){
         }
-        stop();
-        forward(50,1);
+        stop();//stops when right sensor no longer see it
+        forward(50,1);//moves towards the line
         while(middleLineSensor == 0){
         }
-        stop();
-        turn(1,50);
+        stop();//stops when middle line sensor catches the line
+        turn(1,50);//turns left to straighten out, so until left line sensor doesn't see it
         while(leftLineSensor == 0){
         }
-        stop();
+        stop();//stops and gives control back to routeDecicer
     }
 }
