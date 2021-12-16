@@ -1,12 +1,16 @@
-all: main.c
-	sudo gcc -Wall -o main main.c DEV_Config.c PCA9685.c motor.c lineSensor.c avoidanceSensor.c -lm -lwiringPi -lpthread
+CC=gcc
+CFLAGS=-Wall
+LIBS= -lwiringPi -lpthread -lm
+EXECUTABLE= main
+
+.DEFAULT_GOAL := main
 
 main: main.c
-	sudo gcc -Wall -o main main.c DEV_Config.c PCA9685.c motor.c lineSensor.c avoidanceSensor.c -lm -lwiringPi -lpthread
+	sudo $(CC) $(CFLAGS) -o $(EXECUTABLE) main.c DEV_Config.c PCA9685.c motor.c lineSensor.c avoidanceSensor.c echo.c $(LIBS)
 
 clean:
-	sudo rm main
+	@rm -f $(EXECUTABLE)
 
-run:
-	sudo gcc -Wall -o main main.c DEV_Config.c PCA9685.c motor.c lineSensor.c avoidanceSensor.c -lm -lwiringPi -lpthread
-	sudo ./main
+run: main
+	$(CC) $(CFLAGS) -o $(EXECUTABLE) main.c DEV_Config.c PCA9685.c motor.c lineSensor.c avoidanceSensor.c echo.c $(LIBS)
+	./main

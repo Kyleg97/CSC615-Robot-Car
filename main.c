@@ -13,6 +13,7 @@
 #include "avoidanceSensor.h"
 #include "lineSensor.h"
 #include "motor.h"
+#include "echo.h"
 
 // used if the program is quit
 // while the motor is running
@@ -29,6 +30,12 @@ int lastTurned = 1;
 typedef struct {
   int lineSensorPin;
 } lineSensorArgs;
+
+typedef struct{
+	int echoSensorTrig;
+	int echoSensorEcho;
+} echoSensorArgs;
+
 
 void RouteDecider(int speed) {
     // if the car is positioned straight on the line (middle sensor on line, outer off line)
@@ -106,11 +113,14 @@ void RouteDecider(int speed) {
 int main() {
     // setup
     wiringPiSetup();
+    printf("wiringpi setted up\n");
     PCA9685_Init(0x40);
     PCA9685_SetPWMFreq(100);
 
+    printf("pca init done\n");
     pthread_t lineThreads[3];
     // create thread for line sensors
+    printf("linethread creating\n");
     for (int i = 0; i < 3; i++) {
       lineSensorArgs *args = malloc(sizeof *args);
       if (i == 0) {
@@ -122,6 +132,32 @@ int main() {
       }
       pthread_create(&lineThreads[i], NULL, line, args);
     }
+
+    printf("echo thread creating\n");
+    pthread_t detector[3];
+    for(int i = 0; i < 3; i++){
+		echoSensorArgs *args = malloc(sizeof *args);
+		if( i == 0 ){//center echo
+			printf("Creating thread 1, %d,%d\n", CENTERECHOT, CENTERECHOE);
+			args->echoSensorTrig = CENTERECHOT;
+			args->echoSensorEcho = CENTERECHOE;
+		}
+		if( i == 1){//left
+			printf("Creating thread 2\n");
+			args->echoSensorTrig = 8;
+			args->echoSensorEcho = 9;
+		}
+		if( i == 2){//right
+			printf("Creating thread 3\n");
+			args->echoSensorTrig = 12;
+			args->echoSensorEcho = 13;
+		}
+		pthread_create(&detector[i], NULL, objectDetector, args);
+    }
+
+//    for(int i = 0; i < 3; i++){
+//		pthread_join(detector[i], NULL);
+//    }
 
     signal(SIGINT, Handler);
 
